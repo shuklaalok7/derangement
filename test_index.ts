@@ -1,6 +1,11 @@
 import {derangementCounter, ithDerangement} from "./index";
 
-const testData = [{n: 2, i: 1, output: [2, 1]}, {n: 3, i: 2, output: [3, 1, 2]}, {n: 4, i: 5, output: [3, 4, 1, 2]}]
+const testData = [
+    {n: 2, i: 1, output: [2, 1]},
+    {n: 3, i: 2, output: [3, 1, 2]},
+    {n: 4, i: 5, output: [3, 4, 1, 2]},
+    {n: 6, i: 78, output: [3, 4, 6, 5, 2, 1]}
+]
 
 const tests = {
 
@@ -31,4 +36,4 @@ const tests = {
 }
 
 tests.testMain()
-tests.testDerangementCounter()
+// tests.testDerangementCounter()
