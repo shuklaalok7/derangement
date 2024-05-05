@@ -4,7 +4,7 @@
       "ESNext"
     ],
     "module": "esnext",
-    "target": "esnext",
+    "target": "es2022",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
