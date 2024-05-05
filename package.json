@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "bun": "^1.1.7",
+    "bun-types": "^1.1.7"
+  }
+}

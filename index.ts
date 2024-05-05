@@ -1,4 +1,4 @@
-export function ithDerangement(n:number, i:number): number[] {
+export function ithDerangement(n: number, i: number): number[] {
     const totalDerangements = subFactorial(n)
     console.log(`totalDerangements for ${n}: ${totalDerangements}`)
 
@@ -9,6 +9,10 @@ export function ithDerangement(n:number, i:number): number[] {
 
     const output: number[] = new Array(n)
     const used: boolean[] = new Array(n)
+    const dpForDc: number[][] = []
+    for (let j = 0; j <= n + 1; j++) {
+        dpForDc[j] = new Array(n + 1).fill(-1)
+    }
     for (let position = 1; position <= n; position++) {
         let frozenFreedom = 0
         for (let i = 1; i < position; i++) {
@@ -22,7 +26,7 @@ export function ithDerangement(n:number, i:number): number[] {
                 continue
 
             const f = frozenFreedom + (testNumber > position ? 1 : 0)
-            const g = derangementCounter(n - position, f)
+            const g = derangementCounter(n - position, f, dpForDc)
 
             console.log(`f = ${f} g = ${g} testNumber = ${testNumber}`)
 
@@ -41,41 +45,49 @@ export function ithDerangement(n:number, i:number): number[] {
     return output
 }
 
-export function calculateFreedom(output: number[], outputIndex: number, testNumber: number): number {
-    let f = 0
-    for (let i = 1; i < outputIndex; i++) {
-        if (output[i] > outputIndex)
-            f++
-    }
-    if (testNumber > outputIndex)
-        f++
-    return f
-}
+const subFactorialData: { [p: number]: number } = {}
 
-export function subFactorial(n:number): number {
+export function subFactorial(n: number): number {
     if (n == 0)
         return 1
+    if (subFactorialData[n])
+        return subFactorialData[n]
     // Following function is for n>=1
-    return Math.floor((factorial(n)+1)/Math.exp(1))
+    subFactorialData[n] = Math.floor((factorial(n) + 1) / Math.exp(1))
+    return subFactorialData[n]
 }
 
-
-export function factorial(n: number): number {
-    if(n == 1 || n == 0)
+export function factorial(n: number, dp: { [p: number]: number } = {}): number {
+    if (n == 1 || n == 0)
         return 1
-    return n*factorial(n-1)
+    if (dp[n])
+        return dp[n]
+    dp[n] = n * factorial(n - 1)
+    return dp[n]
 }
 
-export function derangementCounter(k: number, f: number): number {
+/**
+ *
+ * @param k
+ * @param f
+ * @param dp Must be at least (k+f)*(f+1) size matrix of derangementCounts. Row is k and column is f.
+ */
+export function derangementCounter(k: number, f: number, dp: number[][]): number {
+    // console.log(`dp = ${JSON.stringify(dp)}\nk = ${k}\t f = ${f}`)
+    // console.log(`dp[${k}][${f}] = ${dp[k][f]}`)
+    if (dp[k][f] != -1)
+        return dp[k][f]
+
     if (f > k || f < 0) {
         throw Error('Invalid f')
     }
     if (f == 0)
         return subFactorial(k)
-        // (K2-J2*($D3-1))/(J$1-$D3+1)
-    const rightUp = derangementCounter(k+1, f-1)
-    const up = derangementCounter(k, f-1)
-    return (rightUp - up*(f-1))/(k-f+1)
+    // Pattern found through brainstorming on a spreadsheet
+    // (K2-J2*($D3-1))/(J$1-$D3+1)
+    const rightUp = derangementCounter(k + 1, f - 1, dp)
+    const up = derangementCounter(k, f - 1, dp)
+    dp[k][f] = (rightUp - up * (f - 1)) / (k - f + 1)
+    return dp[k][f]
 }
 
-// ithDerangement(1, 1);
