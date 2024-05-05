@@ -19,7 +19,7 @@ export function ithDerangement(n: number, i: number): number[] {
             if (output[i - 1] > position)
                 frozenFreedom++
         }
-        console.log(`FrozenFreedom for position ${position} and output ${JSON.stringify(output)} = ${frozenFreedom}`)
+        // console.log(`FrozenFreedom for position ${position} and output ${JSON.stringify(output)} = ${frozenFreedom}`)
         for (let testNumber = 1; testNumber <= n; testNumber++) {
             // Derangement definition
             if (position == testNumber || used[testNumber - 1])
@@ -28,7 +28,7 @@ export function ithDerangement(n: number, i: number): number[] {
             const f = frozenFreedom + (testNumber > position ? 1 : 0)
             const g = derangementCounter(n - position, f, dpForDc)
 
-            console.log(`f = ${f} g = ${g} testNumber = ${testNumber}`)
+            // console.log(`f = ${f} g = ${g} testNumber = ${testNumber}`)
 
             if (i > g) {
                 i -= g
@@ -37,7 +37,7 @@ export function ithDerangement(n: number, i: number): number[] {
 
             output[position - 1] = testNumber
             used[testNumber - 1] = true
-            console.log(`i = ${i} output ${JSON.stringify(output)}`)
+            // console.log(`i = ${i} output ${JSON.stringify(output)}`)
             break
         }
     }
@@ -47,6 +47,7 @@ export function ithDerangement(n: number, i: number): number[] {
 
 const subFactorialData: { [p: number]: number } = {}
 
+// fixme number is running out of capacity
 export function subFactorial(n: number): number {
     if (n == 0)
         return 1
@@ -90,4 +91,31 @@ export function derangementCounter(k: number, f: number, dp: number[][]): number
     dp[k][f] = (rightUp - up * (f - 1)) / (k - f + 1)
     return dp[k][f]
 }
+
+async function main() {
+    // console.log(Bun.argv)
+    let [n, i] = [0, 0]
+    if (Bun.argv.length >= 4)
+        [n, i] = [Number(Bun.argv[2]), Number(Bun.argv[3])]
+    else {
+        let input: string | null = null
+
+        while (!input) {
+            input = prompt("n = ")
+        }
+        n = Number(input)
+        input = null
+
+        while (!input) {
+            input = prompt("i = ")
+        }
+        i = Number(input)
+    }
+    const timeLabel = `time taken for n = ${n} and i = ${i}`
+    console.time(timeLabel)
+    ithDerangement(n, i)
+    console.timeEnd(timeLabel)
+}
+
+await main()
 
