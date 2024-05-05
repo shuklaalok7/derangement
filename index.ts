@@ -1,3 +1,8 @@
+import bigDecimal from "js-big-decimal";
+
+const MINUS_ONE = -1n
+const ONE = 1n
+const EXP = new bigDecimal(Math.exp(1))
 export function ithDerangement(n: number, i: number): number[] {
     const totalDerangements = subFactorial(n)
     console.log(`totalDerangements for ${n}: ${totalDerangements}`)
@@ -9,9 +14,9 @@ export function ithDerangement(n: number, i: number): number[] {
 
     const output: number[] = new Array(n)
     const used: boolean[] = new Array(n)
-    const dpForDc: number[][] = []
+    const dpForDc: bigint[][] = []
     for (let j = 0; j <= n + 1; j++) {
-        dpForDc[j] = new Array(n + 1).fill(-1)
+        dpForDc[j] = new Array(n + 1).fill(MINUS_ONE)
     }
     for (let position = 1; position <= n; position++) {
         let frozenFreedom = 0
@@ -31,7 +36,7 @@ export function ithDerangement(n: number, i: number): number[] {
             // console.log(`f = ${f} g = ${g} testNumber = ${testNumber}`)
 
             if (i > g) {
-                i -= g
+                i -= Number(g)
                 continue
             }
 
@@ -45,25 +50,25 @@ export function ithDerangement(n: number, i: number): number[] {
     return output
 }
 
-const subFactorialData: { [p: number]: number } = {}
+const subFactorialData: { [p: number]: bigint } = {}
 
 // fixme number is running out of capacity
-export function subFactorial(n: number): number {
+export function subFactorial(n: number): bigint {
     if (n == 0)
-        return 1
+        return ONE
     if (subFactorialData[n])
         return subFactorialData[n]
     // Following function is for n>=1
-    subFactorialData[n] = Math.floor((factorial(n) + 1) / Math.exp(1))
+    subFactorialData[n] = BigInt(new bigDecimal(factorial(n) + BigInt(1)).divide(EXP).floor().getValue())
     return subFactorialData[n]
 }
 
-export function factorial(n: number, dp: { [p: number]: number } = {}): number {
+export function factorial(n: number, dp: { [p: number]: bigint } = {}): bigint {
     if (n == 1 || n == 0)
-        return 1
+        return ONE
     if (dp[n])
         return dp[n]
-    dp[n] = n * factorial(n - 1)
+    dp[n] = BigInt(n) * factorial(n - 1)
     return dp[n]
 }
 
@@ -73,10 +78,10 @@ export function factorial(n: number, dp: { [p: number]: number } = {}): number {
  * @param f
  * @param dp Must be at least (k+f)*(f+1) size matrix of derangementCounts. Row is k and column is f.
  */
-export function derangementCounter(k: number, f: number, dp: number[][]): number {
+export function derangementCounter(k: number, f: number, dp: bigint[][]): bigint {
     // console.log(`dp = ${JSON.stringify(dp)}\nk = ${k}\t f = ${f}`)
     // console.log(`dp[${k}][${f}] = ${dp[k][f]}`)
-    if (dp[k][f] != -1)
+    if (dp[k][f] != MINUS_ONE)
         return dp[k][f]
 
     if (f > k || f < 0) {
@@ -88,7 +93,7 @@ export function derangementCounter(k: number, f: number, dp: number[][]): number
     // (K2-J2*($D3-1))/(J$1-$D3+1)
     const rightUp = derangementCounter(k + 1, f - 1, dp)
     const up = derangementCounter(k, f - 1, dp)
-    dp[k][f] = (rightUp - up * (f - 1)) / (k - f + 1)
+    dp[k][f] = (rightUp - up * BigInt(f - 1)) / BigInt(k - f + 1)
     return dp[k][f]
 }
 
