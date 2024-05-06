@@ -1,17 +1,6 @@
 {
-  "type": "commonjs",
   "dependencies": {
     "bun": "^1.1.7",
-    "bun-types": "^1.1.7",
-    "js-big-decimal": "^2.0.7",
-    "inquirer": "^9.2.20"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.5",
-    "ts-node": "^10.9.2",
-    "@types/node": "^20.12.8"
-  },
-  "scripts": {
-    "start": "ts-node index.ts"
+    "bun-types": "^1.1.7"
   }
 }
