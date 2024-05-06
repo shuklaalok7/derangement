@@ -1,4 +1,4 @@
-import {derangementCounter} from "./index";
+import {derangementCounter, ithDerangement, subFactorial} from "./index";
 import {describe, expect, test} from "bun:test";
 
 const ithDerangementTestData: [number, number, number[]][] = [
@@ -27,15 +27,15 @@ const subfactorialTestData: [number, bigint][] = [
 ]
 
 describe("tests", () => {
-    // test.each(ithDerangementTestData)("ithDerangement for n = %i and i = %i should be %o", (n, i, output) => {
-    //     expect(ithDerangement(n, i)).toEqual(output);
-    // })
+    test.each(ithDerangementTestData)("ithDerangement for n = %i and i = %i should be %o", (n, i, output) => {
+        expect(ithDerangement(n, i)).toEqual(output);
+    })
 
     test.each(derangementCounterTestData)("DerangementCounter for k = %i and f = %i", (k, f, output) => {
         expect(derangementCounter(k, f)).toEqual(output)
     })
 
-    // test.each(subfactorialTestData)("subfactorial for n = %i", (n, output) => {
-    //     expect(subFactorial(n)).toEqual(output)
-    // })
+    test.each(subfactorialTestData)("subfactorial for n = %i", (n, output) => {
+        expect(subFactorial(n)).toEqual(output)
+    })
 });
