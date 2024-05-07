@@ -1,3 +1,9 @@
+/**
+ * O(n) algorithm to calculate the ith derangement of a given number n.
+ *
+ * @param n
+ * @param i
+ */
 export function ithDerangement(n: number, i: number): number[] {
     const totalDerangements = subFactorial(n)
     // console.log(`totalDerangements for ${n}: ${totalDerangements}`)
@@ -6,6 +12,9 @@ export function ithDerangement(n: number, i: number): number[] {
         console.error('i is out of bounds')
         return []
     }
+
+    // Preparing cache
+    derangementCounter(Math.floor(n / 2), Math.floor(n / 2))
 
     const output: number[] = new Array(n)
     const used: boolean[] = new Array(n)
@@ -45,7 +54,7 @@ export function ithDerangement(n: number, i: number): number[] {
 const subFactorialCache: { [p: number]: bigint } = {}
 
 /**
- * Calculates the subfactorial of a number using dynamic programming.
+ * Calculates the subfactorial of a number using dynamic programming. O(n) in case of uncached values, O(1) otherwise.
  * @param n The number to calculate the subfactorial of.
  */
 export function subFactorial(n: number): bigint {
@@ -71,7 +80,7 @@ const dcCache: { [k: number]: { [f: number]: bigint } } = {}
 
 
 /**
- * Calculates derangement values iteratively using dynamic programming.
+ * Calculates derangement values iteratively using dynamic programming. O(maxK * maxF) in case of uncached values, O(1) otherwise.
  * @param maxK The maximum k value to compute values for.
  * @param maxF The maximum f value to compute values for.
  */
@@ -94,15 +103,15 @@ function fillDerangementTable(maxK: number, maxF: number): void {
             } else {
                 const rightUp = dcCache[k + 1][f - 1]
                 const up = dcCache[k][f - 1]
+                // console.log(`dcCache[${k}][${f}]`)
                 dcCache[k][f] = (rightUp - up * BigInt(f - 1)) / BigInt(k - f + 1);
-                // console.log(`dcCache[${k}][${f}] = ${(dcCache[k][f]).toString()}`)
             }
         }
     }
 }
 
 /**
- * Uses a precomputed table to return the derangement value.
+ * Uses a precomputed table to return the derangement value. O(1) in case of cached values, O(k * f) otherwise.
  * @param k
  * @param f
  */
@@ -152,6 +161,7 @@ async function main() {
         const timeLabel = `time taken for n = ${n} and i = ${i}`
         console.time(timeLabel)
         console.log(ithDerangement(n, i))
+        // ithDerangement(n, i)
         console.timeEnd(timeLabel)
     }
     // }

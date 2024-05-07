@@ -1,5 +1,6 @@
 import {derangementCounter, ithDerangement, subFactorial} from "./index";
 import {describe, expect, test} from "bun:test";
+import {factorial, ithOddEvenDerangement} from "./odd-even.ts";
 
 const ithDerangementTestData: [number, number, number[]][] = [
     [2, 1, [2, 1]],
@@ -26,6 +27,18 @@ const subfactorialTestData: [number, bigint][] = [
     [13, 2290792932n]
 ]
 
+const factorialData: [number, bigint][] = [
+    [4, 24n],
+    [5, 120n],
+    [50, 30414093201713378043612608166064768844377641568960512000000000000n]
+]
+
+const oddEvenDerangementData: [number, number, number[]][] = [
+    [2, 1, [2, 1]],
+    [4, 4, [4, 3, 2, 1]],
+    [6, 35, [6, 5, 4, 1, 2, 3]]
+]
+
 describe("tests", () => {
     test.each(ithDerangementTestData)("ithDerangement for n = %i and i = %i should be %o", (n, i, output) => {
         expect(ithDerangement(n, i)).toEqual(output);
@@ -39,3 +52,13 @@ describe("tests", () => {
         expect(subFactorial(n)).toEqual(output)
     })
 });
+
+describe("odd-even", () => {
+    test.each(factorialData)("factorial for n = %i", (n, output) => {
+        expect(factorial(n)).toEqual(output)
+    })
+
+    test.each(oddEvenDerangementData)("ith Derangement with odd-even constraint for n = %i and i = %i should be %o", (n, i, output) => {
+        expect(ithOddEvenDerangement(n, i)).toEqual(output)
+    })
+})
